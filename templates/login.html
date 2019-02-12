@@ -1,0 +1,121 @@
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin - Login</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+  <!-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> -->
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+  <!-- <link href="css/sb-admin.css" rel="stylesheet"> -->
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Login</div>
+      <div class="card-body">
+        <form>
+          <label id="error_label" style="color:red;"></label>
+          <div class="form-group">
+            <div class="form-label-group">
+
+              <input type="text" id="domainName" class="form-control" placeholder="Eg:gitlab.com" required="required" autofocus="autofocus">
+              <label for="domainName">Gitlab Domain Name(Eg:gitlab.com )</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label-group">
+              <input type="password" id="token" class="form-control" placeholder="Private Token" required="required">
+              <label for="token">Private Token</label>
+            </div>
+          </div>
+
+          <button type="button" name="button" class="btn btn-primary btn-block" onclick="login()">Login</button>
+          <!-- <a class="btn btn-primary btn-block" href="index.html">Login</a> -->
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
+    <img src="{% static 'image/ajax-loader.gif' %}"></img>
+</div>
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}" ></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}" ></script>
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}" ></script>
+  <!-- <script src="vendor/jquery/jquery.min.js"></script> -->
+  <!-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+
+  <!-- Core plugin JavaScript-->
+  <!-- <script src="vendor/jquery-easing/jquery.easing.min.js"></script> -->
+
+</body>
+<script type="text/javascript">
+  // var str_gitlab =
+  var str_login_url = "{%url 'projects:login_check'%}";
+  var str_csrf = '{{ csrf_token }}';
+  var lst_project = [];
+
+  function login(){
+    $("#ajax_loader").show();
+    document.getElementById('error_label').innerHTML = '';
+    var str_domain = document.getElementById('domainName').value;
+    var str_token = document.getElementById('token').value;
+    if (!str_domain.trim()) {
+      document.getElementById('error_label').innerHTML = 'Enter valid domain name';
+      document.getElementById('domainName').focus();
+    }
+    else if(!str_token.trim()){
+      document.getElementById('error_label').innerHTML = 'Enter valid private token of gitlab account';
+      document.getElementById('token').focus();
+    }else{
+      $.ajax({
+          url: str_login_url,
+          data: {
+             csrfmiddlewaretoken: str_csrf,
+             'domain' : str_domain,
+             'token' : str_token
+        },
+
+        cache: false,
+        type: "POST",
+        success: function(data,response) {
+          document.getElementById('error_label').innerHTML = '';
+
+          if(data.status == 'failed'){
+            $("#ajax_loader").hide();
+            document.getElementById('error_label').innerHTML = 'Invalid details';
+          }
+          else{
+            $("#ajax_loader").hide();
+            sessionStorage.setItem('token', data.id);
+            window.location.href = "http://"+window.location.hostname+":"+window.location.port+"/dashboard/";
+          }
+          //
+        },
+        error: function(xhr) {
+          $("#ajax_loader").hide();
+          document.getElementById('error_label').innerHTML = 'Invalid details';
+        }
+        });
+    }
+
+  }
+</script>
+
+
+</html>

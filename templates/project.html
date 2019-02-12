@@ -1,0 +1,56 @@
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>PM DashBoard - Project</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+  <!-- <link href="css/sb-admin.css" rel="stylesheet"> -->
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-register mx-auto mt-5">
+      <div class="card-header">Project Details</div>
+      <div class="card-body" id="id_card_body">
+
+        <!-- <div class="col-lg-4 col-md-4"><label for="">Opened Issues &nbsp;&nbsp;:</label><span>&nbsp;&nbsp;0</span></div>
+        <div class="col-lg-4 col-md-4"><label for="">Doing Issues &nbsp;&nbsp;&nbsp;&nbsp; :</label><span>&nbsp;&nbsp;5</span></div>
+        <div class="col-lg-4 col-md-4"><label for="">Total Commits &nbsp;&nbsp; :</label><span>&nbsp;&nbsp;6</span></div>
+      </div> -->
+    </div>
+    
+    <!-- spinner -->
+    <div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
+      <img src="{% static 'image/ajax-loader.gif' %}"></img>
+  </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+</body>
+<script type="text/javascript">
+var str_project_url = "{%url 'projects:project_api'%}";
+var str_csrf = '{{ csrf_token }}';
+var id = window.location.href.split('/')[4]
+</script>
+<script type="text/javascript" src="{% static 'js/projects.js' %}"></script>
+</html>
